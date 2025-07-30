@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.env
+.pytest_cache/
+.mypy_cache/
+
+# Node.js
+node_modules/
+dist/
+build/
+.vite/
+
+# Docker
+*.log
+*.tmp
+
+# IDEs
+.idea/
+.vscode/
+
+# Uploads directory
+uploads/
+
+# Database data
+postgres_data/
