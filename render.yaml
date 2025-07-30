@@ -1,43 +1,59 @@
 services:
-  - type: web
-    name: frontend
-    env: node
-    plan: free
-    buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npm run preview -- --port 10000
-    envVars:
-      - key: VITE_API_URL
-        value: https://<backend-service-name>.onrender.com
-
-  - type: web
-    name: backend
+  # PostgreSQL Database
+  - type: pserv
+    name: document-analyzer-db
     env: docker
-    plan: free
-    build:
-      context: ./backend
-      dockerfilePath: Dockerfile
-    startCommand: ""
+    plan: starter
+    dockerfilePath: ./Dockerfile.postgres
+    dockerContext: ./
+    envVars:
+      - key: POSTGRES_USER
+        value: postgres
+      - key: POSTGRES_PASSWORD
+        generateValue: true
+      - key: POSTGRES_DB
+        value: document_analyzer
+    disk:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
+
+  # Backend Service
+  - type: web
+    name: document-analyzer-backend
+    env: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    port: 8000
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: db
+        fromService:
+          type: pserv
+          name: document-analyzer-db
           property: connectionString
       - key: FRONTEND_URL
-        value: https://<frontend-service-name>.onrender.com
+        value: https://document-analyzer-frontend.onrender.com
       - key: UPLOAD_DIR
         value: /app/uploads
       - key: GOOGLE_API_KEY
         sync: false
       - key: LANGSMITH_API_KEY
         sync: false
-    disks:
-      - name: uploads
-        mountPath: /app/uploads
-        sizeGB: 2
+    disk:
+      name: backend-uploads
+      mountPath: /app/uploads
+      sizeGB: 1
 
-
-databases:
-  - name: db
-    plan: free
-    databaseName: document_analyzer
-    user: postgres
+  # Frontend Service
+  - type: web
+    name: document-analyzer-frontend
+    env: docker
+    plan: starter
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    port: 5173
+    envVars:
+      - key: VITE_API_URL
+        value: https://document-analyzer-backend.onrender.com
