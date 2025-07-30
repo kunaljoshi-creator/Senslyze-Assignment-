@@ -8,7 +8,6 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://<backend-service-name>.onrender.com
-    # After initial deployment, replace <backend-service-name> with your backend's actual Render service name
 
   - type: web
     name: backend
@@ -28,13 +27,14 @@ services:
       - key: UPLOAD_DIR
         value: /app/uploads
       - key: GOOGLE_API_KEY
-        sync: false       # Set the actual value securely in the Render Dashboard
+        sync: false
       - key: LANGSMITH_API_KEY
-        sync: false       # Set the actual value securely in the Render Dashboard
+        sync: false
     disks:
       - name: uploads
         mountPath: /app/uploads
         sizeGB: 2
+
 
 databases:
   - name: db
