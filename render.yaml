@@ -26,7 +26,6 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     healthCheckPath: /health
-    port: 8000
     envVars:
       - key: DATABASE_URL
         fromService:
@@ -53,7 +52,6 @@ services:
     plan: starter
     dockerfilePath: ./frontend/Dockerfile
     dockerContext: ./frontend
-    port: 5173
     envVars:
       - key: VITE_API_URL
         value: https://document-analyzer-backend.onrender.com
