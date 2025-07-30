@@ -7,7 +7,8 @@ services:
     startCommand: cd frontend && npm run preview -- --port 10000
     envVars:
       - key: VITE_API_URL
-        value: https://<backend-service-name>.onrender.com  # Replace with actual URL after deploying backend
+        value: https://<backend-service-name>.onrender.com
+    # After initial deployment, replace <backend-service-name> with your backend's actual Render service name
 
   - type: web
     name: backend
@@ -16,27 +17,27 @@ services:
     build:
       context: ./backend
       dockerfilePath: Dockerfile
-    startCommand: ""  # your Dockerfile CMD handles this
+    startCommand: ""
     envVars:
       - key: DATABASE_URL
-        value: postgres://postgres:postgres@<db-service-name>:5432/document_analyzer
+        fromDatabase:
+          name: db
+          property: connectionString
       - key: FRONTEND_URL
-        value: https://<frontend-service-name>.onrender.com  # Replace after both deployed
+        value: https://<frontend-service-name>.onrender.com
       - key: UPLOAD_DIR
         value: /app/uploads
       - key: GOOGLE_API_KEY
-        sync: false      # Set in Render dashboard!
+        sync: false       # Set the actual value securely in the Render Dashboard
       - key: LANGSMITH_API_KEY
-        sync: false      # Set in Render dashboard!
+        sync: false       # Set the actual value securely in the Render Dashboard
     disks:
       - name: uploads
         mountPath: /app/uploads
         sizeGB: 2
 
-  - type: database
-    name: db
+databases:
+  - name: db
+    plan: free
     databaseName: document_analyzer
     user: postgres
-    plan: free
-    ipAllowList: []    # Allow connections from any services in this Render account
-
