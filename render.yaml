@@ -28,8 +28,7 @@ services:
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
-        fromService:
-          type: pserv
+        fromDatabase:
           name: document-analyzer-db
           property: connectionString
       - key: FRONTEND_URL
