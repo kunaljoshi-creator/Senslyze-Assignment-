@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10 MB
 
     # LLM settings
-    GOOGLE_API_KEY: str = "AIzaSyCNwwd_hROGRWkjmjeSboMGdkiUD61w_x4"
-    LANGSMITH_API_KEY: str = "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"
+    GOOGLE_API_KEY: str 
+    LANGSMITH_API_KEY: str
     LANGSMITH_PROJECT: str = "ai-document-analysis"
     LANGSMITH_TRACING: bool = True
     LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
